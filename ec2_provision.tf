@@ -1,13 +1,13 @@
 
-resource "aws_security_group" "ap_south_sg" {
-  name        = "ap_south_sg"
+resource "aws_security_group" "eu_west_sg" {
+  name        = "eu_west_sg"
   description = "port22_open_sg"
-  vpc_id      = aws_vpc.ap_south_vpc.id
+  vpc_id      = aws_vpc.eu_west_vpc.id
   ingress {
     description = "Security Group"
     from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    to_port     = 80
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
@@ -17,14 +17,14 @@ resource "aws_security_group" "ap_south_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
-    Name = "ap_south_sg"
+    Name = "eu_west_sg"
   }
 }
-resource "aws_instance" "ec2_test" {
+resource "aws_instance" "ec2_testserver" {
     ami = var.ami
     subnet_id = aws_subnet.PublicSubnet.id
     instance_type = var.type
-    security_groups = [ aws_security_group.ap_south_sg.id ]
+    security_groups = [ aws_security_group.eu_west_sg.id ]
     key_name = var.key
     associate_public_ip_address = true
     tags = {
@@ -59,7 +59,7 @@ provisioner "remote-exec" {
 connection {
     type = "ssh"
     user = "ec2-user"
-    private_key = file("./trouble.pem")
+    private_key = file("/home/ec2-user/cs/london2.pem")
     host = self.public_ip
   }
   }  

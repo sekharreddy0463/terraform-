@@ -1,56 +1,56 @@
-resource "aws_vpc" "ap_south_vpc" {
+resource "aws_vpc" "eu_west_vpc" {
     cidr_block = var.vpc_cidr
     enable_dns_support = true
     enable_dns_hostnames = true
     tags = {
-      Name = "AP_SOUTH_MUMBAI"
+      Name = "EU_WEST_LONDON"
     }
 }
 resource "aws_subnet" "PublicSubnet" {
-  vpc_id = aws_vpc.ap_south_vpc.id
+  vpc_id = aws_vpc.eu_west_vpc.id
   cidr_block = var.public_subnet
   tags = {
-        Name = "Public_Subnet_ap_south"
+        Name = "Public_Subnet_eu_west"
   }
  availability_zone = data.aws_availability_zones.available.names[0]
 }
 resource "aws_subnet" "PrivateSubnet" {
-  vpc_id = aws_vpc.ap_south_vpc.id
+  vpc_id = aws_vpc.eu_west_vpc.id
   cidr_block = var.private_subnet
   tags = {
-        Name = "Private_Subnet_ap_south"
+        Name = "Private_Subnet_eu_west"
   }
  availability_zone = data.aws_availability_zones.available.names[0]
 }
- resource "aws_internet_gateway" "ap_south_igw" {
-  vpc_id = aws_vpc.ap_south_vpc.id
+ resource "aws_internet_gateway" "eu_west_igw" {
+  vpc_id = aws_vpc.eu_west_vpc.id
 }
-resource "aws_route_table" "public_ap_south_RT" {
-  vpc_id = aws_vpc.ap_south_vpc.id
+resource "aws_route_table" "public_eu_west_RT" {
+  vpc_id = aws_vpc.eu_west_vpc.id
   tags = {
       Name = "Public_RT"
   }
   route {
         cidr_block = "0.0.0.0/0"
-        gateway_id = aws_internet_gateway.ap_south_igw.id
+        gateway_id = aws_internet_gateway.eu_west_igw.id
     }
 }
 resource "aws_route_table_association" "PublicSubnet" {
     subnet_id = aws_subnet.PublicSubnet.id
-    route_table_id = aws_route_table.public_ap_south_RT.id
+    route_table_id = aws_route_table.public_eu_west_RT.id
 }
-resource "aws_route_table" "private_ap_south_RT" {
-  vpc_id = aws_vpc.ap_south_vpc.id
+resource "aws_route_table" "private_eu_west_RT" {
+  vpc_id = aws_vpc.eu_west_vpc.id
   tags = {
       Name = "Private_RT"
   }
 }
 resource "aws_route_table_association" "PrivateSubnet" {
     subnet_id = aws_subnet.PrivateSubnet.id
-    route_table_id = aws_route_table.private_ap_south_RT.id
+    route_table_id = aws_route_table.private_eu_west_RT.id
 }
 resource "aws_network_acl" "Public_Nacl" {
-   vpc_id = aws_vpc.ap_south_vpc.id
+   vpc_id = aws_vpc.eu_west_vpc.id
    subnet_ids = [ aws_subnet.PublicSubnet.id ]
    egress {
         protocol = "-1"
@@ -69,11 +69,11 @@ resource "aws_network_acl" "Public_Nacl" {
         to_port = 0
     }
     tags = {
-    Name = "Ap_South_Public"
+    Name = "eu_west_Public"
     } 
 }
 resource "aws_network_acl" "Private_Nacl" {
-   vpc_id = aws_vpc.ap_south_vpc.id
+   vpc_id = aws_vpc.eu_west_vpc.id
    subnet_ids = [ aws_subnet.PrivateSubnet.id ]
 
     egress {
@@ -93,7 +93,7 @@ resource "aws_network_acl" "Private_Nacl" {
         to_port = 0
     }
     tags = {
-    Name = "Ap_South_Private"
+    Name = "eu_west_Private"
     } 
 }
 

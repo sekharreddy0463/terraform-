@@ -1,7 +1,8 @@
 # Authentication
 provider "aws" {
-  region     = "ap-south-1"
-  access_key = ""
-  secret_key = ""
+  region     = "eu-west-2"
+  access_key = "AKIAT2MSWNDRWMRREREI"
+  secret_key = "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"
 }
 data "aws_availability_zones" "available" {}
+
