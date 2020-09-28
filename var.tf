@@ -11,7 +11,7 @@ variable "private_subnet" {
   description = "private_subnet_AZ"
 }
 variable "key"{
-    default = "london2"
+    default = "newkey"
     description = "aws_keypair for authentication" 
 }
 variable "ami" {
